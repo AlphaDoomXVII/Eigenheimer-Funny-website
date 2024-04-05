@@ -1,14 +1,27 @@
 <?php
-Function greetings
-$name= "John";
-echo= "hello $name";
 
-Function rijbewijs
-$age= 16
-If ($age=> 16) {
-    echo= ( "you are old enough";)}
-Else = {("you're not old enough")}
+greetings("John");
+rijbewijs(7);
 
+
+function greetings($name)
+{
+   
+    echo "hello $name";
+}
+
+
+function rijbewijs($age){
+if ($age >= 16) {
+
+    echo "you are old enough";
+}
+
+else
+{
+    echo "you're not old enough";
+}
+}
 
 
 
