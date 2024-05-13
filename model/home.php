@@ -1,7 +1,7 @@
 <?php
-  require_once "model/guide.php";
+  require_once "view/UI.php";
 
-  use Eigenheimer\Controllers\UI;
+  use Eigenheimer\View\UI;
   
 
   $buttons = []; 
@@ -10,6 +10,7 @@
   $buttons[] = ['title' => 'Routes', 'url' => 'http://example.com/button3'];
   $buttons[] = ['title' => 'Over ons', 'url' => 'http://example.com/button4'];
   UI::navbar($buttons);
+  UI::footer($buttons)
   
 ?>
 
