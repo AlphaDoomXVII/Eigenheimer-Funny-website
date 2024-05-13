@@ -5,10 +5,10 @@
   
 
   $buttons = []; 
-  $buttons[] = ['title' => 'Button 1', 'url' => 'http://example.com/button1'];
-  $buttons[] = ['title' => 'Button 2', 'url' => 'http://example.com/button2'];
-  $buttons[] = ['title' => 'Button 3', 'url' => 'http://example.com/button3'];
-  $buttons[] = ['title' => 'Button 4', 'url' => 'http://example.com/button4'];
+  $buttons[] = ['title' => 'Home', 'url' => 'http://example.com/button1'];
+  $buttons[] = ['title' => 'Bestellen', 'url' => 'http://example.com/button2'];
+  $buttons[] = ['title' => 'Routes', 'url' => 'http://example.com/button3'];
+  $buttons[] = ['title' => 'Over ons', 'url' => 'http://example.com/button4'];
   UI::navbar($buttons);
   
 ?>
