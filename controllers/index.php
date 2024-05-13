@@ -1,7 +1,8 @@
 <?php
 class index {
     function view(){
-        require_once __DIR__ . "/../view/home.php";    }
+        require_once "model/home.php";
+     }
 }
 
 
