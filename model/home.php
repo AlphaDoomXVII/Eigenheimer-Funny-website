@@ -10,7 +10,8 @@
   $buttons[] = ['title' => 'Routes', 'url' => 'http://example.com/button3'];
   $buttons[] = ['title' => 'Over ons', 'url' => 'http://example.com/button4'];
   UI::navbar($buttons);
-  UI::footer($buttons)
+  echo "<h1 class='d-flex justify-content-center'>hallo wereld</h1>";
+  UI::footer($buttons);
   
 ?>
 
