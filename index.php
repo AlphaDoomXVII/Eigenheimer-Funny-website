@@ -37,7 +37,7 @@ if(isset($_GET['controller']) && isset($_GET['action'])) {
             // Switch statement to handle different actions
             switch($action) {
                 case 'view':
-                case 'edit':
+                case 'additem':
                 case 'delete':
                     // Call the action method
                     $controller->$action();
