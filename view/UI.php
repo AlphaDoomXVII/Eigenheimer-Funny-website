@@ -2,7 +2,12 @@
 namespace Eigenheimer\View;
 
 class UI {
-    static public function navbar($buttons) {
+    static public function navbar() {
+        $buttons = []; 
+        $buttons[] = ['title' => 'Home', 'url' => 'http://example.com/button1' , 'class' => ''];
+        $buttons[] = ['title' => 'Bestellen', 'url' => 'http://example.com/button2' , 'class' => '' ];
+        $buttons[] = ['title' => 'Routes', 'url' => 'http://example.com/button3' , 'class' => ''];
+        $buttons[] = ['title' => 'Over ons', 'url' => 'http://example.com/button4' , 'class' => ''];
         if($buttons){
             ?>  <nav class="navbar navbar-expand-lg navbar-light bg-info">
                     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
@@ -41,8 +46,24 @@ class UI {
             <?php
         }
     }
-}
 
+static public function items($amount)
+{
+    ?><div class="container">
+    <div class="row">
+     <?php
+    while ($amount > 0){
+        ?>
+        <div class="col-3 ">
+                One of three columns 
+        </div>
+    <?php $amount -= 1;
+    }
+     ?>
+    </div>
+  </div> <?php
+}
+}
 ?>
 
 
