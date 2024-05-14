@@ -1,8 +1,14 @@
 <?php
   require_once "view/UI.php";
-
   use Eigenheimer\View\UI;
- 
+
+  require_once "controllers/database.php";
+  use Eigenheimer\controllers\connect_Database;
+
+  $data = connect_Database::query_order_food();
+  print_r($data);
+
+
   session_start(); // Start or resume a session
 
   if ($_GET['action'] === 'additem' && isset($_GET['id'])) {
@@ -20,9 +26,9 @@
 
 
   UI::navbar();
-  UI::items(100);
-
-
+  UI::items(12);
+  
+  
   //todo: temporary visual in model -> needs to go to frontend
   
 
