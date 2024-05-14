@@ -1,9 +1,7 @@
 <?php
-
+    require_once "navbar.php"
 ?>
 
-<h1>
+<link rel="stylesheet" href="public\css\home.css">
 
-Tevreden . Impact . Met . Overzicht . op jouw opleiding! <br>
-T.I.M.O. 
-</h1>
+<img src="https://bbeigenheimer.nl/wp-content/uploads/2023/12/Eigenheimer-2023-43-uitgesneden1-scaled.jpg" id="ontbijtHeader">

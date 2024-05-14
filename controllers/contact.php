@@ -1,7 +1,8 @@
 <?php
 class contact {
     function view(){
-        require_once __DIR__ . "/../view/contact.php";    }
+        require_once __DIR__ . "/../view/contact.php";    
+    }
 }
 
 

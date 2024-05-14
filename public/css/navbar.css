@@ -1,0 +1,20 @@
+#headerTemp {
+    background-color: bisque;
+}
+
+#headerUi {
+    display: flex; 
+    align-items: center;
+
+    font-family: Raleway, sans-serif;
+}
+
+.headerUiLinks {
+    padding-right: 30px;
+
+    font-size: x-large;
+}
+
+#eigenheimerLogo {
+    height: 30px;
+}
