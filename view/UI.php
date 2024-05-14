@@ -49,9 +49,19 @@ class UI {
 
 static public function items($amount)
 {
-    ?><div class="container">
-    <div class="row">
-        <div class='col-12' style='margin:10px;'>     
+    ?> 
+    <div class ='float-right'>
+    <?php 
+      if(isset($_SESSION['ids'])){
+        foreach($_SESSION['ids'] as $item){
+          echo "ID: " . $item['id'] . "<br>";
+        }
+     }
+    ?>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class='col-12' style='margin:10px;'>     
                 <a href='?controller=index&action=additem&id=<?php echo -1?> '> 
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                         <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>

@@ -13,7 +13,7 @@
       if (!isset($_SESSION['ids'])) {
           $_SESSION['ids'] = []; // Initialize the array if it's not initialized already
       }
-      $_SESSION['ids'][] = $_GET['id']; // Add the new ID to the array
+      $_SESSION['ids'][] = ['id' => $_GET['id']]; // Add the new ID to the array
      
       header('location:'.$url = preg_replace('/additem&id='.$_GET['id'].'/', 'view', $_SERVER['REQUEST_URI']));
   }
@@ -22,10 +22,9 @@
   UI::navbar();
   UI::items(100);
 
-  if(isset($_SESSION['ids'])){
-    var_dump($_SESSION['ids']);
-  }
 
+  //todo: temporary visual in model -> needs to go to frontend
+  
 
 ?>
 
