@@ -12,7 +12,7 @@ class UI {
             foreach($buttons as $button){
                 //title & url
                 ?>
-                            <a class ="nav-item nav-link" href="<?php echo $button['url']; ?>"><?php echo $button['title']; ?></a>
+                            <a class ="nav-item nav-link <?php echo $button['class']; ?>" href="<?php echo $button['url']; ?>"><?php echo $button['title']; ?></a>
                 <?php
             }
             ?>          </div>

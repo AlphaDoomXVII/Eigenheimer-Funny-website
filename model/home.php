@@ -5,13 +5,14 @@
   
 
   $buttons = []; 
-  $buttons[] = ['title' => 'Home', 'url' => 'http://example.com/button1'];
-  $buttons[] = ['title' => 'Bestellen', 'url' => 'http://example.com/button2'];
-  $buttons[] = ['title' => 'Routes', 'url' => 'http://example.com/button3'];
-  $buttons[] = ['title' => 'Over ons', 'url' => 'http://example.com/button4'];
+  $buttons[] = ['title' => 'Home', 'url' => 'http://example.com/button1' , 'class' => ''];
+  $buttons[] = ['title' => 'Bestellen', 'url' => 'http://example.com/button2' , 'class' => '' ];
+  $buttons[] = ['title' => 'Routes', 'url' => 'http://example.com/button3' , 'class' => ''];
+  $buttons[] = ['title' => 'Over ons', 'url' => 'http://example.com/button4' , 'class' => ''];
   UI::navbar($buttons);
-  echo "<h1 class='d-flex justify-content-center'>hallo wereld</h1>";
-  UI::footer($buttons);
+
+
+
   
 ?>
 
