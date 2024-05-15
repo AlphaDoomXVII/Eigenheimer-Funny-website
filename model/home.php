@@ -26,7 +26,7 @@
 
 
   UI::navbar();
-  UI::items(12 , 11);
+  UI::items($data);
   
   
   //todo: temporary visual in model -> needs to go to frontend

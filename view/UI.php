@@ -47,8 +47,9 @@ class UI {
         }
     }
 
-static public function items($amount)
+static public function items($data)
 {
+    if(!$data) {exit();}
     ?> 
     <div class ='float-right'>
     <div class='col-12' style='margin-top:10px;'>     
@@ -68,24 +69,20 @@ static public function items($amount)
     ?>
     </div>
     <div class="container">
-        <div class="row">
+        <div class="row ">
      <?php
-    while ($amount > 0){
+    foreach ($data as $row){
         ?>
         <div class="col-3 ">
-                bread
-                <a href='?controller=index&action=additem&id=<?php echo $amount?> '> <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/></svg></a>
+                <?php echo $row['name'] . "<br>&euro;" . $row['price'] ?>
+                <a href='?controller=index&action=additem&id=<?php echo $row['id']?> '> <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/></svg></a>
                 
         </div>
-        <?php $amount -= 1;
-    }
-    
-     ?>
-
+        <?php } ?>
     </div>
-  </div> 
-
+</div> 
 <?php
+        
     }
 }
 ?>
