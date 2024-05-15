@@ -10,12 +10,12 @@
   use Eigenheimer\controllers\dataset;
 
   $data = connect_Database::safequery("SELECT * FROM order_food");
-
+  $basket = [];
   if(isset($_POST['selector'])){
     switch ($_POST['selector']){
       case 'additem':
         $basket = additem_basket($_POST['price_item'], $_POST['uuid_item'], $_POST['name_item']);
-        var_dump($basket);
+        unset($_POST);
         break;
       case 'delitem':
         // to do , del item from basket
@@ -72,9 +72,8 @@
 
 
   UI::navbar();
-
-  
   UI::items($data);
+  UI::show_basket($basket);
 
 
   //todo: temporary visual in model -> needs to go to frontend

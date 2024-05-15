@@ -90,9 +90,15 @@ class UI {
             
         }
     
-    static public function showbasket($items)
+    static public function show_basket($items)
     {
-        var_dump($items);
+        //var_dump($items);
+        foreach($items as $item){
+            print_r($item['name_item']);
+            echo "<br> ";
+            print_r($item['price_item']);
+            echo "<br> ";
+        }
     }
 }
 
