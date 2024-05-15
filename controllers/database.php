@@ -12,9 +12,9 @@ class connect_Database
 
   // Database credentials
   $servername = "localhost"; // Replace with your MySQL server address
-  $username = "username"; // Replace with your MySQL username
-  $password = "password"; // Replace with your MySQL password
-  $dbname = "database"; // Replace with your MySQL database name
+  $username = "timo"; // Replace with your MySQL username
+  $password = "timo"; // Replace with your MySQL password
+  $dbname = "eigenheimer"; // Replace with your MySQL database name
 
     try {
       // Create connection
@@ -31,10 +31,30 @@ class connect_Database
     }
   }
   
-  public static function query_order_food()
+  public static function safequery($query)
   {
-    $db = new self();
-    return $db->connect_main();
+      $db = new self();
+      $conn = $db->connect_main();
+      
+      // Check if the connection is successful
+      if ($conn instanceof PDO) {
+          try {
+              // Execute the provided query
+              $result = $conn->query($query);
+    
+              // Check if the query executed successfully
+              if ($result !== false) {
+                  // Fetch the data and return
+                  return $result->fetchAll(PDO::FETCH_ASSOC);
+              } else {
+                  return false; // Query failed
+              }
+          } catch (PDOException $e) {
+              return $e; // Return the exception object
+          }
+      } else {
+          return false; // Failed to connect to the database
+      }
   }
   
 }

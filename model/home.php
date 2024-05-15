@@ -5,8 +5,8 @@
   require_once "controllers/database.php";
   use Eigenheimer\controllers\connect_Database;
 
-  $data = connect_Database::query_order_food();
-  print_r($data);
+  $data = connect_Database::safequery("SELECT * FROM order_food");
+  var_dump($data);
 
 
   session_start(); // Start or resume a session
@@ -26,7 +26,7 @@
 
 
   UI::navbar();
-  UI::items(12);
+  UI::items(12 , 11);
   
   
   //todo: temporary visual in model -> needs to go to frontend
