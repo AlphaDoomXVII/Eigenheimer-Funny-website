@@ -15,15 +15,16 @@
     switch ($_POST['selector']){
       case 'additem':
         $basket = additem_basket($_POST['price_item'], $_POST['uuid_item'], $_POST['name_item']);
-        unset($_POST);
         break;
-      case 'delitem':
-        // to do , del item from basket
+      case 'removeitem':
+        $removeitem = remove_item($_POST['basket_item_uuid']);
+        UI::show_basket($basket);
         break;
+        default:
     }
   }
 
-  
+
 
 
 
@@ -68,13 +69,22 @@
       // Optionally, you can return the item data for further processing if needed
       return $_SESSION['items'];
   }
+  function remove_item($removeitem)
+  {
+      $index = array_search($removeitem, array_column($_SESSION['items'], 'basket_item_uuid'));
+  
+      // If the item is found, remove it
+      if ($index !== false) {
+          unset($_SESSION['items'][$index]);
+      }
+  }
   
 
 
   UI::navbar();
   UI::items($data);
-  UI::show_basket($basket);
 
+  UI::show_basket($_SESSION['items']);
 
   //todo: temporary visual in model -> needs to go to frontend
 

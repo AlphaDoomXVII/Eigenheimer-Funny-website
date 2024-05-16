@@ -51,18 +51,6 @@ class UI {
     {
         if(!$data) {exit();}
         ?> 
-        <div class ='float-right'>
-        <div class='col-12' style='margin-top:10px;'>     
-                    <a href='?controller=index&action=additem&id=<?php echo -1?> '> alles
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
-                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
-                        </svg> 
-                    </a> 
-                </div>
-        <?php 
-        ?>
-        </div>
         <div class="container">
             <div class="row ">
         <?php
@@ -89,20 +77,41 @@ class UI {
         <?php
             
         }
-    
-    static public function show_basket($items)
+   static public function show_basket($items)
     {
-        //var_dump($items);
-        foreach($items as $item){
-            print_r($item['name_item']);
-            echo "<br> ";
-            print_r($item['price_item']);
-            echo "<br> ";
-        }
+    if(!isset($items) || empty($items)) {
+        $items = [];
     }
+    ?> 
+    <ul class ='float-right list-group col-3' > 
+    <?php 
+    foreach($items as $item){
+        ?>
+        <li class='list-group-item float-left'>
+            <form method="post">
+                <input type="hidden" name="selector" id="selector" value="removeitem">
+                <input type="hidden" name="basket_item_uuid" id="basket_item_uuid" value="<?php echo $item['basket_item_uuid'] ?>">
+                <input type="hidden" name="uuid_item" id="uuid_item" value="<?php echo $item['uuid_item'] ?>">
+                <button type="submit" class="btn btn-danger float-left">
+                    &nbsp;<i class="bi bi-trash"></i>
+                    &nbsp;
+                </button>
+            </form>
+            <?php echo '&nbsp;'.$item['name_item'] ?>
+            <div class='float-right'> &euro;<?php echo $item['price_item']; ?></div>
+        </li> 
+        <?php
+    }
+    ?>
+    </ul> 
+    <?php 
+    }
+
 }
+
 
 
 ?>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
