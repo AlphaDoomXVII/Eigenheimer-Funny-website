@@ -49,6 +49,7 @@ app/
     Model.php                   -> basis-CRUD-model (all/find/create/update/delete)
     Csrf.php                     -> CSRF-token per sessie
     Uuid.php                      -> UUID-generator
+    SchemaParser.php               -> zet database/xml/*.xml om naar database/schema.sql
   Modules/
     Bestellen/                 -> één module = Controller + Models/ + Views/, zoals elke module in ticketsystemVHE
       BestellenController.php
@@ -67,7 +68,10 @@ app/
 config/
   config.php                    -> DB-config, leest .env
 database/
-  schema.sql                     -> features-tabel
+  xml/                            -> tabel-definities, één XML-bestand per tabel (bron van de waarheid)
+    README.md                      -> uitleg XML-formaat
+  parse.php                       -> genereert database/schema.sql uit database/xml/*.xml
+  schema.sql                     -> gegenereerd bestand, niet handmatig bewerken
 public/                          -> enige map die publiek bereikbaar hoort te zijn (webroot)
   index.php                       -> front controller: definieert routes, dispatcht
   router.php                       -> voor php -S (lokaal draaien zonder Apache)
@@ -76,7 +80,7 @@ public/                          -> enige map die publiek bereikbaar hoort te zi
 .htaccess                          -> stuurt alles door naar public/
 ```
 
-**Wat is 1-op-1 overgenomen uit ticketsystemVHE:** de `app/`-map met `bootstrap.php` en een `Core/`-laag (Router, Controller, Database, Model, Csrf), de indeling in `Modules/<Naam>/{Controller, Models/, Views/}`, `Shared/` voor cross-cutting concerns zoals rechten, `Views/layouts` + `Views/partials`, en `public/` als enige webroot met een front controller die alle routes registreert en dispatcht (i.p.v. de oude `?controller=&action=`-querystring-aanpak).
+**Wat is 1-op-1 overgenomen uit ticketsystemVHE:** de `app/`-map met `bootstrap.php` en een `Core/`-laag (Router, Controller, Database, Model, Csrf), de indeling in `Modules/<Naam>/{Controller, Models/, Views/}`, `Shared/` voor cross-cutting concerns zoals rechten, `Views/layouts` + `Views/partials`, `public/` als enige webroot met een front controller die alle routes registreert en dispatcht (i.p.v. de oude `?controller=&action=`-querystring-aanpak), en het XML-gedreven databaseschema (`database/xml/*.xml` + `app/Core/SchemaParser.php` + `database/parse.php`, zie [database/xml/README.md](database/xml/README.md)).
 
 **Wat is (nog) niet overgenomen:** de grote hoeveelheid kant-en-klare modules van het ticketsysteem zelf (tickets, kennisbank, etc.) — alleen de *core* is overgenomen. Ook ontbreken nog `CrudController`/`Table`/paginering (komt pas van pas zodra Fase 2/3 echte CRUD-schermen toevoegt) en een `Auth`-module met login (Fase 4).
 
@@ -107,6 +111,7 @@ De huidige `app/`-structuur is de gedeelde core (Router, Controller, Database, M
 - Sessielogica van het winkelmandje losgetrokken naar [app/Modules/Bestellen/Models/BasketModel.php](app/Modules/Bestellen/Models/BasketModel.php), databasequery voor het menu naar [app/Modules/Bestellen/Models/MenuItemModel.php](app/Modules/Bestellen/Models/MenuItemModel.php) — beide los van elkaar en los van view-rendering (voorheen vermengd in één `model/home.php`)
 - Structuur overgenomen van [ticketsystemVHE](https://github.com/hetgameboekje/ticketsystemVHE): `app/bootstrap.php` + `app/Core/{Router,Controller,Database,Model,Csrf,Uuid}.php`, modules als `app/Modules/<Naam>/{Controller, Models/, Views/}`, `app/Shared/` voor rechten, `public/` als enige webroot met front controller — zie [Architectuur](#architectuur) hierboven
 - Basisrechtensysteem opgezet: [app/Shared/Rechten/Models/FeatureModel.php](app/Shared/Rechten/Models/FeatureModel.php) + [database/schema.sql](database/schema.sql) (tabel `features`). Ontbreekt een feature in de database, dan staat die standaard aan (fail-open) zodat een lege tabel de site niet blokkeert. De `bestellen`-feature is als eerste gekoppeld in `BestellenController`.
+- Databaseschema alsnog XML-gedreven gemaakt, naar het patroon van [ticketsystemVHE](https://github.com/hetgameboekje/ticketsystemVHE/tree/main/database/xml): [app/Core/SchemaParser.php](app/Core/SchemaParser.php) zet [database/xml/*.xml](database/xml/) (één bestand per tabel) om naar [database/schema.sql](database/schema.sql) via `php database/parse.php`. `schema.sql` is nu een gegenereerd bestand — wijzigingen aan het schema gaan voortaan via de XML, niet meer rechtstreeks in `schema.sql`. De live-database-apply/dev-sync-kant van het origineel (`applyToDatabase()`, `DevSync`, de "Database toepassen"-knop) is bewust niet overgenomen: dat hangt aan een Beheer-/login-scherm dat hier pas in Fase 4/5 komt.
 - CSRF-bescherming op alle POST-routes toegevoegd ([app/Core/Csrf.php](app/Core/Csrf.php) + [app/Core/Router.php](app/Core/Router.php)) — bestond nog niet in de oude opzet
 - Oude root-structuur (`index.php`, `controllers/`, `model/`, `view/`) volledig verwijderd, incl. de dode `controllers/indexStan.php` en de nooit afgemaakte `controllers/login.php`/`controllers/contact.php`-stubs
 - Getest: `php -l` op alle bestanden, en een lokale `php -S`-run met de volledige bestel-mand-flow (item toevoegen, verwijderen, CSRF-afwijzing bij ongeldig token)

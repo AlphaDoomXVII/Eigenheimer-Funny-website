@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Fase 1: basaal rechtensysteem.
+Elke rij is een aan/uit-schakelbare feature (bv. 'kamers', 'bestellen').
+Ontbreekt een feature in deze tabel, dan behandelt FeatureModel::isEnabled()
+die als standaard aan (fail-open), zie app/Shared/Rechten/Models/FeatureModel.php.
+-->
+<table name="features" engine="InnoDB">
+  <columns>
+    <column name="feature" type="VARCHAR" length="50" primary="true" nullable="false"/>
+    <column name="enabled" type="TINYINT" length="1" nullable="false" default="1"/>
+  </columns>
+  <seed>
+    <row><value column="feature">bestellen</value><value column="enabled">1</value></row>
+    <row><value column="feature">kamers</value><value column="enabled">1</value></row>
+  </seed>
+</table>

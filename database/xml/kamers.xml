@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Fase 2: kamerbeheer. Kolommen matchen App\Modules\Kamers\Models\KamerModel::$fillable. -->
+<table name="kamers" engine="InnoDB">
+  <columns>
+    <column name="id" type="INT" primary="true" auto_increment="true"/>
+    <column name="UUID" type="VARCHAR" length="36" nullable="false" unique="true"/>
+    <column name="name" type="VARCHAR" length="100" nullable="false"/>
+    <column name="description" type="TEXT" nullable="false"/>
+    <column name="price" type="DECIMAL" length="8,2" nullable="false" default="0"/>
+    <column name="photo_path" type="VARCHAR" length="255" nullable="false" default="''"/>
+    <column name="is_available" type="TINYINT" length="1" nullable="false" default="1"/>
+  </columns>
+</table>
