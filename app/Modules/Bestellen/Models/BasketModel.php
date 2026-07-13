@@ -14,12 +14,13 @@ class BasketModel
         return $_SESSION['items'] ?? [];
     }
 
-    public static function add(string $price, string $uuid, string $name): array
+    public static function add(string $price, string $uuid, string $name, string $dagdeel = ''): array
     {
         $item = [
             'price_item' => $price,
             'uuid_item' => $uuid,
             'name_item' => $name,
+            'dagdeel_item' => $dagdeel,
             'basket_item_uuid' => Uuid::generate(),
         ];
 

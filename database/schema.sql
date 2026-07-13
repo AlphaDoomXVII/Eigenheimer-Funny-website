@@ -18,6 +18,16 @@ CREATE TABLE IF NOT EXISTS kamers (
     PRIMARY KEY (id)
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS order_food (
+    id INT AUTO_INCREMENT,
+    UUID VARCHAR(36) NOT NULL UNIQUE,
+    name VARCHAR(100) NOT NULL,
+    price DECIMAL(8,2) NOT NULL DEFAULT 0,
+    dagdeel VARCHAR(20) NOT NULL DEFAULT 'ontbijt',
+    is_available TINYINT(1) NOT NULL DEFAULT 1,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB;
+
 INSERT INTO features (feature, enabled) VALUES ('bestellen', '1') ON DUPLICATE KEY UPDATE feature = feature;
 INSERT INTO features (feature, enabled) VALUES ('kamers', '1') ON DUPLICATE KEY UPDATE feature = feature;
 

@@ -128,11 +128,16 @@ Nog niet gedaan in Fase 1 (komt terug in latere fases): het splitsen naar `/weba
 
 Nog niet gedaan in Fase 2 (komt terug in latere fases): kamerbeheer staat nog niet achter een intranet/login (`/kamers/beheer` is voor iedereen bereikbaar, net als `/kamers`) — dat volgt met Fase 4 (rollen/auth) en Fase 5 (intranet-split). Foto's zijn nu een los URL-veld, geen upload.
 
-### Fase 3 — Eten bestellen per dagdeel
-- Uitbreiden van bestaand `order_food`/basket-patroon met een `dagdeel` (ontbijt/lunch/diner)
-- Menubeheer (CRUD) in het intranet, per dagdeel
-- Bestelflow in de webapp: alleen items tonen die bij het huidige/gekozen dagdeel horen
-- Rechten-toggle: bestelsysteem volledig uit te zetten via het rechtensysteem
+### Fase 3 — Eten bestellen per dagdeel ✅
+- `order_food` had nog geen XML-definitie (werd alleen bevraagd, nooit gemigreerd); toegevoegd als [database/xml/order_food.xml](database/xml/order_food.xml) met een `dagdeel`-kolom (`ontbijt`/`lunch`/`diner`, default `ontbijt`) en `is_available`, naar het patroon van `kamers.xml`
+- [app/Modules/Bestellen/Models/MenuItemModel.php](app/Modules/Bestellen/Models/MenuItemModel.php): `DAGDELEN`-constante, `byDagdeel()` (alleen beschikbare items voor één dagdeel, fail-safe naar `[]`) en `toggleAvailability()`, analoog aan `KamerModel`
+- [app/Modules/Bestellen/Models/BasketModel.php](app/Modules/Bestellen/Models/BasketModel.php): winkelmandje-items dragen nu ook `dagdeel_item` mee
+- Menubeheer (CRUD) toegevoegd aan [app/Modules/Bestellen/BestellenController.php](app/Modules/Bestellen/BestellenController.php) (`menuBeheer`/`menuCreate`/`menuStore`/`menuEdit`/`menuUpdate`/`menuDestroy`/`menuToggle`) met eigen views ([beheer.php](app/Modules/Bestellen/Views/BestellenView/beheer.php), [vorm.php](app/Modules/Bestellen/Views/BestellenView/vorm.php)), naast de publieke bestel-actie — zelfde side-by-side aanpak (geen intranet/auth-scheiding) als `KamerController` in Fase 2
+- Bestelflow in de webapp ([index.php](app/Modules/Bestellen/Views/BestellenView/index.php)) toont tabs voor ontbijt/lunch/diner en filtert het menu op het gekozen dagdeel (`?dagdeel=...`); zonder keuze wordt het dagdeel automatisch bepaald op basis van het tijdstip (6–11 ontbijt, 11–17 lunch, verder diner)
+- Rechten-toggle: de bestaande `bestellen`-feature dekt zowel de publieke bestelflow als het mandje, ongewijzigd sinds Fase 1
+- Getest: `php -l` op alle nieuwe/gewijzigde bestanden, `php database/parse.php` om `schema.sql` te regenereren, en een lokale `php -S`-run van `/`, `/?dagdeel=lunch`, `/bestellen/beheer` en `/bestellen/nieuw`. Geen lokale MySQL beschikbaar, dus de databasegedreven kant (menu-item aanmaken/bewerken/verwijderen/toggle tegen een echte `order_food`-tabel) is niet end-to-end getest — wel de fail-safe lege-lijst-paden.
+
+Nog niet gedaan in Fase 3 (komt terug in latere fases): menubeheer staat, net als kamerbeheer, nog niet achter een intranet/login.
 
 ### Fase 4 — Rechtensysteem uitbreiden
 - Rollen (bijv. admin, medewerker, gast) met bijbehorende rechten

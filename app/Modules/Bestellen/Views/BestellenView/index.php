@@ -1,9 +1,22 @@
 <?php
 /** @var array $menuItems */
 /** @var array $basketItems */
+/** @var string $dagdeel */
+/** @var array $dagdelen */
 /** @var string $csrfToken */
+$labels = ['ontbijt' => 'Ontbijt', 'lunch' => 'Lunch', 'diner' => 'Diner'];
 ?>
 <div class="container">
+    <ul class="nav nav-tabs mb-3">
+        <?php foreach ($dagdelen as $optie): ?>
+            <li class="nav-item">
+                <a class="nav-link <?= $optie === $dagdeel ? 'active' : '' ?>" href="/?dagdeel=<?= urlencode($optie) ?>">
+                    <?= htmlspecialchars($labels[$optie] ?? $optie) ?>
+                </a>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+
     <div class="row">
         <?php foreach ($menuItems as $item): ?>
             <div class="col-3">
@@ -12,12 +25,17 @@
                     <input type="hidden" name="price_item" value="<?= htmlspecialchars($item['price']) ?>">
                     <input type="hidden" name="uuid_item" value="<?= htmlspecialchars($item['UUID']) ?>">
                     <input type="hidden" name="name_item" value="<?= htmlspecialchars($item['name']) ?>">
+                    <input type="hidden" name="dagdeel_item" value="<?= htmlspecialchars($item['dagdeel']) ?>">
                     <input type="submit" class="button" value="+">
                 </form>
 
                 <?= htmlspecialchars($item['name']) ?><br>&euro;<?= htmlspecialchars($item['price']) ?>
             </div>
         <?php endforeach; ?>
+
+        <?php if ($menuItems === []): ?>
+            <p>Geen items beschikbaar voor <?= htmlspecialchars($labels[$dagdeel] ?? $dagdeel) ?>.</p>
+        <?php endif; ?>
     </div>
 </div>
 
