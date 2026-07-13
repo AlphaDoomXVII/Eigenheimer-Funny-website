@@ -4,6 +4,7 @@ namespace App\Modules\Kamers;
 
 use App\Core\Controller;
 use App\Core\Uuid;
+use App\Core\Validator;
 use App\Modules\Kamers\Models\KamerModel;
 use App\Shared\Rechten\Models\FeatureModel;
 
@@ -58,13 +59,26 @@ class KamerController extends Controller
             return;
         }
 
+        $oud = $this->kamerInput();
+        $fouten = $this->valideerKamer($oud);
+        if ($fouten !== []) {
+            $this->render('Modules/Kamers/Views/KamerView/vorm', [
+                'kamer' => null,
+                'oud' => $oud,
+                'fouten' => $fouten,
+                'activeModule' => 'kamers',
+                'pageTitle' => 'Nieuwe kamer',
+            ]);
+            return;
+        }
+
         KamerModel::create([
             'UUID' => Uuid::generate(),
-            'name' => (string) ($_POST['name'] ?? ''),
-            'description' => (string) ($_POST['description'] ?? ''),
-            'price' => (string) ($_POST['price'] ?? '0'),
-            'photo_path' => (string) ($_POST['photo_path'] ?? ''),
-            'is_available' => isset($_POST['is_available']) ? 1 : 0,
+            'name' => $oud['name'],
+            'description' => $oud['description'],
+            'price' => $oud['price'],
+            'photo_path' => $oud['photo_path'],
+            'is_available' => $oud['is_available'] ? 1 : 0,
         ]);
 
         $this->redirect('/kamers/beheer');
@@ -96,12 +110,25 @@ class KamerController extends Controller
             return;
         }
 
+        $oud = $this->kamerInput();
+        $fouten = $this->valideerKamer($oud);
+        if ($fouten !== []) {
+            $this->render('Modules/Kamers/Views/KamerView/vorm', [
+                'kamer' => ['id' => $id],
+                'oud' => $oud,
+                'fouten' => $fouten,
+                'activeModule' => 'kamers',
+                'pageTitle' => 'Kamer bewerken',
+            ]);
+            return;
+        }
+
         KamerModel::update($id, [
-            'name' => (string) ($_POST['name'] ?? ''),
-            'description' => (string) ($_POST['description'] ?? ''),
-            'price' => (string) ($_POST['price'] ?? '0'),
-            'photo_path' => (string) ($_POST['photo_path'] ?? ''),
-            'is_available' => isset($_POST['is_available']) ? 1 : 0,
+            'name' => $oud['name'],
+            'description' => $oud['description'],
+            'price' => $oud['price'],
+            'photo_path' => $oud['photo_path'],
+            'is_available' => $oud['is_available'] ? 1 : 0,
         ]);
 
         $this->redirect('/kamers/beheer');
@@ -125,5 +152,29 @@ class KamerController extends Controller
 
         KamerModel::toggleAvailability($id);
         $this->redirect('/kamers/beheer');
+    }
+
+    private function kamerInput(): array
+    {
+        return [
+            'name' => (string) ($_POST['name'] ?? ''),
+            'description' => (string) ($_POST['description'] ?? ''),
+            'price' => (string) ($_POST['price'] ?? '0'),
+            'photo_path' => (string) ($_POST['photo_path'] ?? ''),
+            'is_available' => isset($_POST['is_available']),
+        ];
+    }
+
+    private function valideerKamer(array $input): array
+    {
+        $fouten = [];
+        if (!Validator::required($input['name'])) {
+            $fouten[] = 'Naam is verplicht.';
+        }
+        if (!Validator::nonNegativeNumber($input['price'])) {
+            $fouten[] = 'Prijs moet een getal van 0 of hoger zijn.';
+        }
+
+        return $fouten;
     }
 }

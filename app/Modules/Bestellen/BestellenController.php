@@ -4,6 +4,7 @@ namespace App\Modules\Bestellen;
 
 use App\Core\Controller;
 use App\Core\Uuid;
+use App\Core\Validator;
 use App\Modules\Bestellen\Models\BasketModel;
 use App\Modules\Bestellen\Models\BestellingModel;
 use App\Modules\Bestellen\Models\MenuItemModel;
@@ -21,6 +22,11 @@ class BestellenController extends Controller
             return;
         }
 
+        $this->renderBestellen();
+    }
+
+    private function renderBestellen(array $fouten = [], array $oud = []): void
+    {
         $dagdeel = $this->huidigDagdeel();
 
         $this->render('Modules/Bestellen/Views/BestellenView/index', [
@@ -28,6 +34,8 @@ class BestellenController extends Controller
             'basketItems' => BasketModel::items(),
             'dagdeel' => $dagdeel,
             'dagdelen' => MenuItemModel::DAGDELEN,
+            'fouten' => $fouten,
+            'oud' => $oud,
             'activeModule' => 'bestellen',
             'pageTitle' => 'Bestellen',
         ]);
@@ -59,11 +67,17 @@ class BestellenController extends Controller
             return;
         }
 
+        $klantNaam = (string) ($_POST['klant_naam'] ?? '');
+        if (!Validator::required($klantNaam)) {
+            $this->renderBestellen(['Naam is verplicht.'], ['klant_naam' => $klantNaam]);
+            return;
+        }
+
         $totaal = array_sum(array_map(fn (array $item) => (float) $item['price_item'], $items));
 
         BestellingModel::create([
             'UUID' => Uuid::generate(),
-            'klant_naam' => (string) ($_POST['klant_naam'] ?? ''),
+            'klant_naam' => $klantNaam,
             'items' => json_encode($items, JSON_UNESCAPED_UNICODE),
             'totaal' => (string) $totaal,
             'status' => 'openstaand',
@@ -107,12 +121,26 @@ class BestellenController extends Controller
             return;
         }
 
+        $oud = $this->menuInput();
+        $fouten = $this->valideerMenuItem($oud);
+        if ($fouten !== []) {
+            $this->render('Modules/Bestellen/Views/BestellenView/vorm', [
+                'menuItem' => null,
+                'oud' => $oud,
+                'fouten' => $fouten,
+                'dagdelen' => MenuItemModel::DAGDELEN,
+                'activeModule' => 'bestellen',
+                'pageTitle' => 'Nieuw menu-item',
+            ]);
+            return;
+        }
+
         MenuItemModel::create([
             'UUID' => Uuid::generate(),
-            'name' => (string) ($_POST['name'] ?? ''),
-            'price' => (string) ($_POST['price'] ?? '0'),
-            'dagdeel' => (string) ($_POST['dagdeel'] ?? MenuItemModel::DAGDELEN[0]),
-            'is_available' => isset($_POST['is_available']) ? 1 : 0,
+            'name' => $oud['name'],
+            'price' => $oud['price'],
+            'dagdeel' => $oud['dagdeel'],
+            'is_available' => $oud['is_available'] ? 1 : 0,
         ]);
 
         $this->redirect('/bestellen/beheer');
@@ -145,11 +173,25 @@ class BestellenController extends Controller
             return;
         }
 
+        $oud = $this->menuInput();
+        $fouten = $this->valideerMenuItem($oud);
+        if ($fouten !== []) {
+            $this->render('Modules/Bestellen/Views/BestellenView/vorm', [
+                'menuItem' => ['id' => $id],
+                'oud' => $oud,
+                'fouten' => $fouten,
+                'dagdelen' => MenuItemModel::DAGDELEN,
+                'activeModule' => 'bestellen',
+                'pageTitle' => 'Menu-item bewerken',
+            ]);
+            return;
+        }
+
         MenuItemModel::update($id, [
-            'name' => (string) ($_POST['name'] ?? ''),
-            'price' => (string) ($_POST['price'] ?? '0'),
-            'dagdeel' => (string) ($_POST['dagdeel'] ?? MenuItemModel::DAGDELEN[0]),
-            'is_available' => isset($_POST['is_available']) ? 1 : 0,
+            'name' => $oud['name'],
+            'price' => $oud['price'],
+            'dagdeel' => $oud['dagdeel'],
+            'is_available' => $oud['is_available'] ? 1 : 0,
         ]);
 
         $this->redirect('/bestellen/beheer');
@@ -173,6 +215,32 @@ class BestellenController extends Controller
 
         MenuItemModel::toggleAvailability($id);
         $this->redirect('/bestellen/beheer');
+    }
+
+    private function menuInput(): array
+    {
+        return [
+            'name' => (string) ($_POST['name'] ?? ''),
+            'price' => (string) ($_POST['price'] ?? '0'),
+            'dagdeel' => (string) ($_POST['dagdeel'] ?? MenuItemModel::DAGDELEN[0]),
+            'is_available' => isset($_POST['is_available']),
+        ];
+    }
+
+    private function valideerMenuItem(array $input): array
+    {
+        $fouten = [];
+        if (!Validator::required($input['name'])) {
+            $fouten[] = 'Naam is verplicht.';
+        }
+        if (!Validator::nonNegativeNumber($input['price'])) {
+            $fouten[] = 'Prijs moet een getal van 0 of hoger zijn.';
+        }
+        if (!in_array($input['dagdeel'], MenuItemModel::DAGDELEN, true)) {
+            $fouten[] = 'Kies een geldig dagdeel.';
+        }
+
+        return $fouten;
     }
 
     private function huidigDagdeel(): string
