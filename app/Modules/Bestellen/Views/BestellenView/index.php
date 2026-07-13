@@ -1,0 +1,37 @@
+<?php
+/** @var array $menuItems */
+/** @var array $basketItems */
+/** @var string $csrfToken */
+?>
+<div class="container">
+    <div class="row">
+        <?php foreach ($menuItems as $item): ?>
+            <div class="col-3">
+                <form method="post" action="/bestellen/mand">
+                    <input type="hidden" name="_csrf" value="<?= htmlspecialchars($csrfToken) ?>">
+                    <input type="hidden" name="price_item" value="<?= htmlspecialchars($item['price']) ?>">
+                    <input type="hidden" name="uuid_item" value="<?= htmlspecialchars($item['UUID']) ?>">
+                    <input type="hidden" name="name_item" value="<?= htmlspecialchars($item['name']) ?>">
+                    <input type="submit" class="button" value="+">
+                </form>
+
+                <?= htmlspecialchars($item['name']) ?><br>&euro;<?= htmlspecialchars($item['price']) ?>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</div>
+
+<ul class="float-right list-group col-3">
+    <?php foreach ($basketItems as $item): ?>
+        <li class="list-group-item float-left">
+            <form method="post" action="/bestellen/mand/<?= urlencode($item['basket_item_uuid']) ?>/verwijderen">
+                <input type="hidden" name="_csrf" value="<?= htmlspecialchars($csrfToken) ?>">
+                <button type="submit" class="btn btn-danger float-left">
+                    &nbsp;<i class="bi bi-trash"></i>&nbsp;
+                </button>
+            </form>
+            &nbsp;<?= htmlspecialchars($item['name_item']) ?>
+            <div class="float-right">&euro;<?= htmlspecialchars($item['price_item']) ?></div>
+        </li>
+    <?php endforeach; ?>
+</ul>
