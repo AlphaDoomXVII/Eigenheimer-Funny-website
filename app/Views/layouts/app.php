@@ -23,7 +23,10 @@
 </head>
 <body>
 
-<?php require APP_ROOT . '/app/Views/partials/navbar.php'; ?>
+<?php
+$navbar = (defined('APP_CONTEXT') && APP_CONTEXT === 'intranet') ? 'navbar-intranet' : 'navbar-webapp';
+require APP_ROOT . "/app/Views/partials/{$navbar}.php";
+?>
 
 <main>
     <?= $content ?>

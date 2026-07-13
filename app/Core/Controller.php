@@ -2,6 +2,8 @@
 
 namespace App\Core;
 
+use App\Shared\Auth\Auth;
+
 abstract class Controller
 {
     protected function render(string $view, array $data = []): void
@@ -28,5 +30,16 @@ abstract class Controller
     {
         header('Location: ' . $path);
         exit;
+    }
+
+    /** Admin/medewerker-only; redirect naar /login als niet ingelogd met de juiste rol. */
+    protected function requireBeheerder(): bool
+    {
+        if (Auth::hasRole(['admin', 'medewerker'])) {
+            return true;
+        }
+
+        $this->redirect('/login');
+        return false;
     }
 }

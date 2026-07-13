@@ -22,6 +22,29 @@ class FeatureModel
         return self::$cache[$feature] ?? true;
     }
 
+    /** @return array<string, bool> feature => enabled, voor het rechten-instellingenscherm */
+    public static function all(): array
+    {
+        if (self::$cache === null) {
+            self::$cache = self::load();
+        }
+
+        return self::$cache;
+    }
+
+    public static function toggle(string $feature): void
+    {
+        try {
+            Database::pdo()
+                ->prepare('UPDATE features SET enabled = NOT enabled WHERE feature = ?')
+                ->execute([$feature]);
+        } catch (\Throwable $e) {
+            // Fail-open: als de tabel ontbreekt, is er niets om te togglen.
+        }
+
+        self::$cache = null;
+    }
+
     private static function load(): array
     {
         try {

@@ -53,3 +53,11 @@ $labels = ['ontbijt' => 'Ontbijt', 'lunch' => 'Lunch', 'diner' => 'Diner'];
         </li>
     <?php endforeach; ?>
 </ul>
+
+<?php if ($basketItems !== []): ?>
+    <form method="post" action="/bestellen/afronden" class="float-right col-3 mt-2">
+        <input type="hidden" name="_csrf" value="<?= htmlspecialchars($csrfToken) ?>">
+        <input type="text" name="klant_naam" class="form-control mb-2" placeholder="Naam">
+        <button type="submit" class="btn btn-success btn-block">Bestelling plaatsen</button>
+    </form>
+<?php endif; ?>

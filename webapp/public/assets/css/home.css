@@ -1,0 +1,8 @@
+@media only screen and (max-width: 1080px) {
+    #ontbijtHeader {
+        width: 100vw;
+
+        display: flex;
+        align-items: center;
+    }
+}

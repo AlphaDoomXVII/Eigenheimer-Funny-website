@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Fase 5: intranet-dashboard. Kolommen matchen App\Modules\Bestellen\Models\BestellingModel::$fillable. -->
+<table name="bestellingen" engine="InnoDB">
+  <columns>
+    <column name="id" type="INT" primary="true" auto_increment="true"/>
+    <column name="UUID" type="VARCHAR" length="36" nullable="false" unique="true"/>
+    <column name="klant_naam" type="VARCHAR" length="100" nullable="false" default="''"/>
+    <column name="items" type="TEXT" nullable="false"/>
+    <column name="totaal" type="DECIMAL" length="8,2" nullable="false" default="0"/>
+    <column name="status" type="VARCHAR" length="20" nullable="false" default="'openstaand'"/>
+    <column name="created_at" type="TIMESTAMP" nullable="false" default="CURRENT_TIMESTAMP"/>
+  </columns>
+</table>

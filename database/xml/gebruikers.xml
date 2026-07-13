@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Fase 4: rollen/auth. Kolommen matchen App\Shared\Auth\Models\UserModel::$fillable.
+`rol` is een vrij tekstveld (geen aparte rollen-tabel, zelfde eenvoud als de features-tabel)
+met drie geldige waarden: admin, medewerker, gast — zie UserModel::ROLES.
+Seed bevat één standaard adminaccount zodat het beheer na het inladen van dit schema
+meteen bereikbaar is. Wachtwoord: "eigenheimer2026" — direct wijzigen in productie.
+-->
+<table name="gebruikers" engine="InnoDB">
+  <columns>
+    <column name="id" type="INT" primary="true" auto_increment="true"/>
+    <column name="UUID" type="VARCHAR" length="36" nullable="false" unique="true"/>
+    <column name="naam" type="VARCHAR" length="100" nullable="false"/>
+    <column name="email" type="VARCHAR" length="150" nullable="false" unique="true"/>
+    <column name="wachtwoord_hash" type="VARCHAR" length="255" nullable="false"/>
+    <column name="rol" type="VARCHAR" length="20" nullable="false" default="'gast'"/>
+    <column name="is_actief" type="TINYINT" length="1" nullable="false" default="1"/>
+  </columns>
+  <seed>
+    <row>
+      <value column="UUID">00000000-0000-4000-8000-000000000001</value>
+      <value column="naam">Beheerder</value>
+      <value column="email">admin@bbeigenheimer.nl</value>
+      <value column="wachtwoord_hash">$2y$12$noU4Z8guHxT3I3tyiMuCk.EIqkfB7G/EIa45i8ghYBTDJhU8PhEHO</value>
+      <value column="rol">admin</value>
+      <value column="is_actief">1</value>
+    </row>
+  </seed>
+</table>

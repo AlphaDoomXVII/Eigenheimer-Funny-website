@@ -41,4 +41,9 @@ class BasketModel
             unset($_SESSION['items'][$index]);
         }
     }
+
+    public static function clear(): void
+    {
+        unset($_SESSION['items']);
+    }
 }

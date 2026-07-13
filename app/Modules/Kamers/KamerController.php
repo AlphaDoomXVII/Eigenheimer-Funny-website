@@ -28,6 +28,10 @@ class KamerController extends Controller
 
     public function beheer(): void
     {
+        if (!$this->requireBeheerder()) {
+            return;
+        }
+
         $this->render('Modules/Kamers/Views/KamerView/beheer', [
             'kamers' => KamerModel::all(),
             'activeModule' => 'kamers',
@@ -37,6 +41,10 @@ class KamerController extends Controller
 
     public function create(): void
     {
+        if (!$this->requireBeheerder()) {
+            return;
+        }
+
         $this->render('Modules/Kamers/Views/KamerView/vorm', [
             'kamer' => null,
             'activeModule' => 'kamers',
@@ -46,6 +54,10 @@ class KamerController extends Controller
 
     public function store(): void
     {
+        if (!$this->requireBeheerder()) {
+            return;
+        }
+
         KamerModel::create([
             'UUID' => Uuid::generate(),
             'name' => (string) ($_POST['name'] ?? ''),
@@ -60,6 +72,10 @@ class KamerController extends Controller
 
     public function edit(int $id): void
     {
+        if (!$this->requireBeheerder()) {
+            return;
+        }
+
         $kamer = KamerModel::find($id);
         if ($kamer === null) {
             http_response_code(404);
@@ -76,6 +92,10 @@ class KamerController extends Controller
 
     public function update(int $id): void
     {
+        if (!$this->requireBeheerder()) {
+            return;
+        }
+
         KamerModel::update($id, [
             'name' => (string) ($_POST['name'] ?? ''),
             'description' => (string) ($_POST['description'] ?? ''),
@@ -89,12 +109,20 @@ class KamerController extends Controller
 
     public function destroy(int $id): void
     {
+        if (!$this->requireBeheerder()) {
+            return;
+        }
+
         KamerModel::delete($id);
         $this->redirect('/kamers/beheer');
     }
 
     public function toggle(int $id): void
     {
+        if (!$this->requireBeheerder()) {
+            return;
+        }
+
         KamerModel::toggleAvailability($id);
         $this->redirect('/kamers/beheer');
     }
