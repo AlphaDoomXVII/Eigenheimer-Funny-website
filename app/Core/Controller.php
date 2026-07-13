@@ -13,13 +13,14 @@ abstract class Controller
             throw new \RuntimeException("View niet gevonden: {$view}");
         }
 
+        $activeModule = $activeModule ?? '';
+        $pageTitle = $pageTitle ?? '';
+        $csrfToken = Csrf::token();
+
         ob_start();
         require $viewPath;
         $content = ob_get_clean();
 
-        $activeModule = $activeModule ?? '';
-        $pageTitle = $pageTitle ?? '';
-        $csrfToken = Csrf::token();
         require APP_ROOT . '/app/Views/layouts/app.php';
     }
 

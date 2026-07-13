@@ -113,11 +113,15 @@ De huidige `app/`-structuur is de gedeelde core (Router, Controller, Database, M
 
 Nog niet gedaan in Fase 1 (komt terug in latere fases): het splitsen naar `/webapp/` en `/intranet/` subfolders, en een rollen-/logingedreven rechtenscherm (`app/Shared/Auth`, naar het patroon van ticketsystemVHE).
 
-### Fase 2 — Kamerbeheer
-- Database-model voor kamers (naam, beschrijving, prijs, beschikbaarheid, foto's)
-- CRUD in het intranet (toevoegen, bewerken, verwijderen, activeren/deactiveren)
-- Weergave van beschikbare kamers in de webapp
-- Rechten-toggle: kamerbeheer volledig uit te zetten via het rechtensysteem
+### Fase 2 — Kamerbeheer ✅
+- Database-model: tabel `kamers` (naam, beschrijving, prijs, foto (URL), beschikbaarheid) toegevoegd aan [database/schema.sql](database/schema.sql), plus [app/Modules/Kamers/Models/KamerModel.php](app/Modules/Kamers/Models/KamerModel.php) (extends `Core\Model`, fail-safe naar `[]` als de tabel/DB ontbreekt, net als `MenuItemModel`)
+- Nieuwe module `Kamers` naar het bestaande Controller+Models+Views-patroon: [app/Modules/Kamers/KamerController.php](app/Modules/Kamers/KamerController.php) met `index` (publieke lijst van beschikbare kamers), `beheer` (lijst van alle kamers) en CRUD-acties (`create`/`store`, `edit`/`update`, `destroy`, `toggle` voor activeren/deactiveren)
+- Weergave van beschikbare kamers in de webapp op `/kamers` ([app/Modules/Kamers/Views/KamerView/index.php](app/Modules/Kamers/Views/KamerView/index.php)); beheerscherm op `/kamers/beheer` met een gedeeld formulier ([vorm.php](app/Modules/Kamers/Views/KamerView/vorm.php)) voor toevoegen/bewerken
+- Rechten-toggle: `kamers`-feature (stond al in `features`-tabel sinds Fase 1) bepaalt of `/kamers` de lijst of de `uitgeschakeld`-view toont — kamerbeheer is dus volledig uit te zetten via het rechtensysteem, net als bestellen
+- Bugfix in [app/Core/Controller.php](app/Core/Controller.php): `render()` zette `$csrfToken` pas ná het renderen van de view, waardoor elk formulier dat `$csrfToken` gebruikt (ook de bestaande bestel-mand-forms) een lege/undefined token verstuurde en op elke POST een 419 kreeg. Token wordt nu vóór het renderen van de view gezet.
+- Getest: `php -l` op alle nieuwe/gewijzigde bestanden, en een lokale `php -S`-run van `/`, `/kamers`, `/kamers/beheer` en `/kamers/nieuw` (inclusief check dat het CSRF-veld nu een echte token bevat). Geen lokale MySQL beschikbaar in deze omgeving, dus de databasegedreven CRUD-flow (aanmaken/bewerken/verwijderen/toggle tegen een echte `kamers`-tabel) is niet end-to-end getest — wel de fail-safe lege-lijst-paden.
+
+Nog niet gedaan in Fase 2 (komt terug in latere fases): kamerbeheer staat nog niet achter een intranet/login (`/kamers/beheer` is voor iedereen bereikbaar, net als `/kamers`) — dat volgt met Fase 4 (rollen/auth) en Fase 5 (intranet-split). Foto's zijn nu een los URL-veld, geen upload.
 
 ### Fase 3 — Eten bestellen per dagdeel
 - Uitbreiden van bestaand `order_food`/basket-patroon met een `dagdeel` (ontbijt/lunch/diner)
