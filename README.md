@@ -11,6 +11,53 @@ Dit project verbetert en breidt de bestaande website van B&B Eigenheimer uit met
 
 Beide applicaties staan in aparte subfolders, zodat ze onafhankelijk van elkaar draaien en niet op hetzelfde systeem hoeven te staan.
 
+## Aan de slag
+
+### Vereisten
+
+- PHP (met de `pdo_mysql`-extensie)
+- Een MySQL/MariaDB-database
+- Geen composer/npm nodig — er is niets te installeren, dit project heeft geen dependencies buiten PHP zelf.
+
+### Installatie
+
+1. Kopieer `.env.example` naar `.env` en vul de echte databasegegevens in (`DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`). `.env` staat in `.gitignore` en wordt dus nooit gecommit. Ontbreekt `.env`, dan gelden de hardcoded lokale defaults in [config/config.php](config/config.php).
+2. Maak de database aan die je in `.env` hebt opgegeven en laad het schema erin:
+   ```
+   mysql -u <gebruiker> -p <database> < database/schema.sql
+   ```
+   Dit zet o.a. de `features`-tabel (met seedrijen) neer die het rechtensysteem gebruikt, plus `kamers`, `order_food`, `gebruikers` (met een geseede standaard adminaccount, zie Fase 4 hieronder) en `bestellingen`.
+
+### Draaien
+
+Er zijn twee onafhankelijke front controllers, één per app — draai er één of allebei tegelijk (verschillende poorten, aparte terminals):
+
+```
+php -S localhost:8000 -t webapp/public webapp/public/router.php
+php -S localhost:8001 -t intranet/public intranet/public/router.php
+```
+
+- **Webapp** (`localhost:8000`) — publieke site: kamers bekijken (`/kamers`), eten bestellen met winkelmandje (`/`, `/bestellen/afronden`).
+- **Intranet** (`localhost:8001`) — beheeromgeving, achter login: dashboard (`/`), kamerbeheer (`/kamers/beheer`), menubeheer (`/bestellen/beheer`), rechten (`/rechten`). Log in op `/login` met het geseede adminaccount (zie Fase 4) of een zelf toegevoegde rij in `gebruikers`.
+
+Elke `router.php` serveert bestaande bestanden direct en stuurt al het overige door naar de front controller van die app (`index.php`) — dit bootst de `.htaccess`-rewrite na die onder Apache gebruikt wordt.
+
+### Testen
+
+Er zijn geen geautomatiseerde tests of een lint/build-stap. Controleer wijzigingen met:
+```
+php -l <bestand>
+```
+en door de route handmatig te doorlopen (bijv. de winkelmandje-flow: item toevoegen/verwijderen, en CSRF-afwijzing bij een ongeldig token).
+
+### Databaseschema wijzigen
+
+Het schema is XML-gedreven: één bestand per tabel in [database/xml/](database/xml/) (zie [database/xml/README.md](database/xml/README.md) voor het formaat). Na het aanpassen van een tabel-XML:
+```
+php database/parse.php
+```
+Dit regenereert `database/schema.sql` — bewerk dat bestand nooit rechtstreeks.
+
 ## Doel
 
 De huidige site (https://bbeigenheimer.nl/) biedt geen mogelijkheid om:
